@@ -117,14 +117,14 @@ class Scorer:
         for idx, doc_id in enumerate(self.data):
             self.data[doc_id]['sys_summs']['ref'] = {'sys_summ': self.single_ref_lines[idx], 'scores': {}}
 
-        ld_fn = '../plm_ft/cnndm_saves/wfreq.save'
-        logger.info('loading wfreq from %s', ld_fn)
-        freq_d = torch.load(ld_fn)
-        f_sum = sum([w[1] for w in freq_d.items()])
-        logprob_d = {w: math.log(v * 1.0 / f_sum) for w,v in freq_d.items()}
-        self.wfreq_d, self.wlogprob_d = freq_d, logprob_d
+        #ld_fn = '../plm_ft/cnndm_saves/wfreq.save'
+        #logger.info('loading wfreq from %s', ld_fn)
+        #freq_d = torch.load(ld_fn)
+        #f_sum = sum([w[1] for w in freq_d.items()])
+        #logprob_d = {w: math.log(v * 1.0 / f_sum) for w,v in freq_d.items()}
+        #self.wfreq_d, self.wlogprob_d = freq_d, logprob_d
 
-        transform_d = {'src': self.srcs, 'refs': self.single_ref_lines, 'wfreq_d': self.wfreq_d, 'wlogprob_d': self.wlogprob_d} 
+        transform_d = {'src': self.srcs, 'refs': self.single_ref_lines} #, 'wfreq_d': self.wfreq_d, 'wlogprob_d': self.wlogprob_d} 
         transform_d['all_sents'] = list(itertools.chain(*[sent_tokenize(ss) for ss in self.single_ref_lines])); assert(len(transform_d['all_sents']) > len(self.single_ref_lines))
 
         if args.hypo_transform and ('freq3gram' in args.hypo_transform or 'freq4gram' in args.hypo_transform):
@@ -396,7 +396,7 @@ class Scorer:
                     ref_lines = self.multi_ref_lines
                 
                 src_lines = self.get_src_lines() #source documents
-                transform_d = {'refs': self.single_ref_lines, 'refs_reserve': self.multi_ref_lines_reserve, 'wfreq_d': self.wfreq_d, 'wlogprob_d': self.wlogprob_d}
+                #transform_d = {'refs': self.single_ref_lines, 'refs_reserve': self.multi_ref_lines_reserve, 'wfreq_d': self.wfreq_d, 'wlogprob_d': self.wlogprob_d}
 
                 #here i only report f-measure since it's mostly used
                 rouge_var = ['rouge2', 'rougeL']; fr_var = ['rouge2-f', 'rougeL-f']; s_d = {rv: {} for rv in fr_var};
