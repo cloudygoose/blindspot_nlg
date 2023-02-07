@@ -2,7 +2,7 @@ This is the Repo for the paper: [On the Blind Spots of Model-Based Evaluation Me
 
 We have code for three tasks, summarization, translation, and open-ended generation. For summarization or translation, please see [here](sum_mt/README.md). 
 
-Our code and data for open-ended generation will be out soon. Note that the package dependency for open-ended generation is different (The metrics are different and the code is not shared), so you might need to create a seperate virtual environment.
+Our code and data for open-ended generation is [here](wiki/README.md). Note that the package dependency for open-ended generation is different (The metrics are different and the code is not shared), so you might need to create a seperate virtual environment.
 
 For information about how the **TED-MT** data is constructed, please refer to our paper and sum_mt/MT/ted_zhen/README.txt .
 
