@@ -4,7 +4,7 @@ We have code for three tasks, summarization, translation, and open-ended generat
 
 Our code and data for open-ended generation will be out soon. Note that the package dependency for open-ended generation is different (The metrics are different and the code is not shared), so you might need to create a seperate virtual environment.
 
-For information about how the **TED-MT** data is constructed, please refer to our paper and sum_mt/MT/ted_zhen/README.txt .
+One shortcoming of WMT data is they mostly contain only one sentence, therefore we build the TED-MT dataset. For information about how the **TED-MT** data is constructed, please refer to sum_mt/MT/ted_zhen/README.txt . 
 
 The code for summarization or translation is developed based on the released code of [BARTScore](https://github.com/neulab/BARTScore/).
 
