@@ -1,9 +1,9 @@
 ## Preparation 
 
-First let's create a virtual environment (here I use the name ENVNAME, but you can use any name you prefer). This environment is for open-ended tasks.
+First let's create a virtual environment (here I use the name blindspots_wiki, but you can use any name you prefer). This environment is for open-ended tasks.
 ```
-conda env create -n ENVNAME --file environment.yml
-conda activate ENVNAME
+conda env create -n blindspots_wiki --file environment.yml
+conda activate blindspots_wiki
 ```
 
 For using Spacy in the consistency checks:
@@ -11,6 +11,12 @@ For using Spacy in the consistency checks:
 conda install -c conda-forge cupy
 python -m spacy download en_core_web_sm
 python -m spacy download en_core_web_trf
+pip install pyinflect
+```
+
+Download NLTK data:
+```
+python -m nltk.downloader popular
 ```
 
 ## Data
