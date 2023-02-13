@@ -1,9 +1,9 @@
 #!/bin/bash
 
 FEAT_MODEL=$1 # gpt2, rbt, electra-l-disc
-REF=$3
-SUFFIX=$4
-GENS=(${@:5}) 
+REF=$2
+SUFFIX=$3
+GENS=(${@:4}) 
 
 if [[ $FEAT_MODEL == 'gpt2' ]]; then
     params="--output_suffix gpt2-l$SUFFIX"

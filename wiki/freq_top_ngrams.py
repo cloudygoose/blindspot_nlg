@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 def get_output_path(args):
     tokenizer_str = f'_tok{args.tokenizer}' if args.tokenizer is not None else ''
-    output_path = f'gen_mod/top_ngram{tokenizer_str}/n{args.num}_max{args.max_length}/{args.gram}gram_topk{args.topk}.txt'
+    output_path = f'data/top_ngram{tokenizer_str}/n{args.num}_max{args.max_length}/{args.gram}gram_topk{args.topk}.txt'
     assert not os.path.exists(output_path)
     return output_path
 

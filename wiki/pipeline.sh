@@ -3,14 +3,14 @@ module load anaconda/2021a; source activate jack
 
 DATA_DIR=data/wikitext-103-raw/train
 OUTPUT_DIR=score_saves/wiki
-REF_NUM=$1 # 1000 default
+REF_NUM=1000 # 1000 default
 MAX_LEN=256
 
 if [[ $REF_NUM -ne 1000 ]]; then
     OUTPUT_DIR+="_ref$REF_NUM"
 fi
-METRICS=($2) # (gpt-ppl mlm-ppl mauve-gpt2 mauve-roberta mauve-electra)
-OP_NAMES=(${@:3}) # (ref con-all flu-all con-negate-A con-switchsent-A con-replacesent-A con-genericner)
+METRICS=($1) # (gpt-ppl mlm-ppl mauve-gpt2 mauve-roberta mauve-electra)
+OP_NAMES=(${@:2}) # (ref con-all flu-all con-negate-A con-switchsent-A con-replacesent-A con-genericner)
 
 echo "output_dir: $OUTPUT_DIR"
 echo "metrics: ${METRICS[@]}"
