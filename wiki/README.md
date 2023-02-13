@@ -18,7 +18,40 @@ To get full wikitext-103 data, run `python get_wiki_data.py`, which simply downl
 
 `data/refs1.txt` and `data/refs2.txt` are two non-overlapping sets of wikitext-103 paragraphs of size 1000 each. The text is already preprocessed for the ease of using. We will use `data/refs1.txt` as the gold hypothesis, and `data/refs1.txt` as the starting point to create the noised hypothesis.
 
-## Non-Fluency/Consistency Tests
+## Fluency & Consistency Tests: 
+
+Fluency & consistency tests are designed to be runned in a full pipeline that first generate noised hypotheses, and then eval metric scores on these hypotheses. The full details of running the fluency and consistency is available in `pipeline.py`, but the helper script `pipeline.sh` could make things easier:
+
+To run all fluency and consistency tests, simply do
+```sh
+for metric in gpt-ppl mlm-ppl mauve-gpt2 mauve-roberta mauve-electra;
+do
+    ./pipeline.sh $metric ref con-all flu-all
+done
+```
+
+The above bash scripts go through each metric in a for loop, and for each metric, it runs on the gold hypothesis (denoted `ref`), all consistency tests (denoted `con-all`), and all fluency tests (denoted `flu-all`).
+
+The score will be saved in `score_saves/wiki/${metric_name}/${test_name}.json` by default.
+
+To run individual tests, please refere to [README_tests.md](./README_tests.md) for details. For example, to run the Truncation tests with 10% of the data truncated, use the test name `flu-truncate-0.10`. Note that the hyperparameter determining the amount of truncation is variable, for example, `flu-truncate-0.20` is truncating 20%.
+
+An example that runs the truncation 20% test on MAUVE-RoBERTa is:
+```sh
+PYTHONPATH=$PWD ./pipeline.sh mauve-roberta flu-truncate-0.20
+```
+
+### Plotting Fluency & Consistency Results
+Use `plot.py` to plot fluency & consistency results. The important arguments are `--metric_results_dir` which is the dir that contains results `.json` files, and `--output_path` which specifies the output png path. For example:
+```sh
+mkdir plots
+python plot.py --metric_results_dir score_saves/wiki/mauve-roberta --output_path plots/mauve-roberta.png --error_bar
+```
+plots test results for MAUVE-RoBERTa with error bars.
+
+More information on plotting can be found in `plot.py`. There are more arguments that makes plots better looking, e.g. `--max_edr` to make plotting focused on 0 to a max noise-ratio and makes things bigger.
+
+## All Other Tests
 
 ### Step 1: generate noised hypotheses
 
@@ -30,6 +63,17 @@ python repl_gen.py --generation data/refs2.txt --op $OP
 ```
 
 where `$OP` is one of ['prefix', 'middle', 'suffix', 'prefix-shuffle', 'middle-shuffle', 'suffix-shuffle', 'replast'] that determines the operation. The first 6 corresponds to the 6 error types are used for the positioned error test. `repleast` is used for the repetition test.
+
+The naming convention here is a bit different to the paper. Here is a conversion table, where noise type is the name shown on the paper:
+
+| Noise Type     | Operation      |
+|----------------|----------------|
+| Random-Start   | prefix         |
+| Random-Middle  | middle         |
+| Random-End     | suffix         |
+| Shuffle-Start  | prefix-shuffle |
+| Shuffle-Middle | middle-shuffle |
+| Shuffle-End    | suffix-shuffle |
 
 By default, the noised hypothesis will be generated at `data/refs2_repl-{OP}-10.txt` where `{OP}` is the chosen operation.
 
@@ -53,9 +97,23 @@ Then, using this statistics to generate gibberish that consists of top-k ngrams 
 ```sh
 python freq_top_ngrams.py --counter_path metadata/freqdict_wiki103train_4gram.pkl --gram 4 --topk 50
 ```
-Note that the path in --counter_path is the pickle we produced in the last step. By default, the noised hypothesis is saved in `gen_mod/top_ngram/n1000_max256/{n}gram_topk{k}.txt` where `{n}` and `{k}` are specified by --gram and --topk, resp.
+Note that the path in --counter_path is the pickle we produced in the last step. By default, the noised hypothesis is saved in `data/top_ngram/n1000_max256/{n}gram_topk{k}.txt` where `{n}` and `{k}` are specified by --gram and --topk, resp.
 
 ### Step 2: run metrics on noised hypotheses
+#### **PPL variants**
+Similar to MAUVE, PPL variants have a script to evaluate the scores, `eval_clm.py`. You can use it as follows:
+
+GPT-PPL:
+```sh
+python eval_clm.py --model gpt2-large --generation $GEN --output_suffix $SUFFIX
+```
+MLM-PPL:
+```sh
+python eval_clm.py --model roberta-large -mlm --generation $GEN --output_suffix $SUFFIX
+```
+where `GEN` is the hypothesis to test, and `SUFFIX` is for deduplication of output file.
+
+Note that by default, the batch size for MLM-PPL is 32 for efficiency. If this does not fit in your GPU, you can adjust the batch size for MLM-PPl using the `--mlm_batch_size` flag. More details are available in `eval_mauve.py`.
 
 #### **MAUVE variants**
 The code that runs MAUVE variants on a reference and hypothesis pair is in `eval_mauve.py`. However, it is more convenient to use the helper script `eval_mauve.sh`:
@@ -73,43 +131,16 @@ For example:
 ```
 produce the MAUVE-RoBERTa score of using `data/refs1.txt` as the reference, and `data/refs2.txt` as the hypothesis. It will output a file `mauve_gold_hypo.csv` in the same directory of the last hypothesis file. More details are available in `eval_mauve.py`.
 
-### **PPL variants**
-Similar to MAUVE, PPL variants have a script to evaluate the scores, `eval_clm.py`. You can use it as follows:
+In our experiments, MAUVE-ELECTRA (i.e., using `electra-l-disc` as the FEAT_MODEL) is the best-performing variant, while rbt and gpt2 has blind spots
 
-GPT-PPL:
+#### **Example**
+Below we provide a concrete example of how to reproduce the positioned error test for MAUVE-RoBERTa on the RANDOM-START noise type, which corresponds to the `prefix` operation
 ```sh
-python eval_clm.py --model gpt2-large --generation $GEN --output_suffix $SUFFIX
+PYTHONPATH=$PWD python repl_gen.py --generation data/refs2.txt --op prefix
+
+PYTHONPATH=$PWD ./eval_mauve.sh rbt data/refs1.txt _prefix-shuffle data/refs2_repl-prefix-shuffle-10.txt
 ```
-MLM-PPL:
-```sh
-python eval_clm.py --model roberta-large -mlm --generation $GEN --output_suffix $SUFFIX
-```
-where `GEN` is the hypothesis to test, and `SUFFIX` is for deduplication of output file.
-
-Note that by default, the batch size for MLM-PPL is 32 for efficiency. If this does not fit in your GPU, you can adjust the batch size for MLM-PPl using the `--mlm_batch_size` flag. More details are available in `eval_mauve.py`.
-
-## Fluency & Consistency Tests: 
-
-Fluency & consistency tests are designed to be runned in a full pipeline that first generate noised hypotheses, and then eval metric scores on these hypotheses. The full details of running the fluency and consistency is available in `pipeline.py`, but the helper script `pipeline.sh` could make things easier:
-
-To run all fluency and consistency tests, simply do
-```sh
-for metric in gpt-ppl mlm-ppl mauve-gpt2 mauve-roberta mauve-electra;
-do
-    ./pipeline.sh gpt-ppl ref con-all flu-all
-done
-```
-
-The score will be saved in `score_saves/wiki/${metric_name}/${test_name}.json` by default.
-
-### Plotting Fluency & Consistency Results
-Use `plot.py` to plot fluency & consistency results. The important arguments are `--metric_results_dir` which is the dir that contains results `.json` files, and `--output_path` which specifies the output png path. For example:
-```sh
-python plot.py --metric_results_dir score_saves/wiki/mauve-roberta --output_path plots/mauve-roberta.png --error_bar
-```
-plots test results for MAUVE-RoBERTa with error bars.
-
-More information on plotting can be found in `plot.py`. There are more arguments that makes plots better looking, e.g. `--max_edr` to make plotting focused on 0 to a max noise-ratio and makes things bigger.
+This will produce `data/mauve_rbt-l_prefix-shuffle.csv` which stores the MAUVE score and `data/div_rbt-l_prefix-shuffle.png` which stores the divergence plot.
 
 ## Notes
 
