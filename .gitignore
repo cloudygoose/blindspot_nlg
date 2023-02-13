@@ -1,3 +1,9 @@
+# Custom
+wiki/score_saves
+wiki/data/wikitext-103-raw
+wiki/metadata
+wiki/data/top_ngram
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
