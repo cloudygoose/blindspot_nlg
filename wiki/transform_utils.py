@@ -1,6 +1,4 @@
-import re
 import logging, random, math
-import numpy as np
 from nltk import word_tokenize, sent_tokenize
 import spacy
 import utils

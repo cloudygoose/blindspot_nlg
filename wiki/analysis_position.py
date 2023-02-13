@@ -8,7 +8,6 @@ import numpy as np
 import math
 from util import load_file_by_line
 from tqdm import tqdm
-from torch.profiler import profile, record_function, ProfilerActivity
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Load model and retrieve attention weights
