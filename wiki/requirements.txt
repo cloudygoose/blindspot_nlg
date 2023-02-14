@@ -1,0 +1,8 @@
+transformers==4.20.1
+datasets==2.4.0
+matplotlib==3.5.1
+tqdm==4.64.0
+editdistance==0.6.0
+natsort==8.2.0
+mauve-text==0.3.0
+checklist==0.0.11
