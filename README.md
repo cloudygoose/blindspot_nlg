@@ -1,3 +1,5 @@
+![](teaser.png)
+
 This is the Repo for the paper: [On the Blind Spots of Model-Based Evaluation Metrics for Text Generation](https://arxiv.org/abs/2212.10020)
 
 We have code for three tasks, summarization, translation, and open-ended generation. For summarization or translation, please see [here](sum_mt/README.md). 
