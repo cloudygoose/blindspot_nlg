@@ -2,8 +2,16 @@
 
 First let's create a virtual environment (here I use the name blindspots_wiki, but you can use any name you prefer). This environment is for open-ended tasks.
 ```
-conda env create -n blindspots_wiki --file environment.yml
+conda create -n blindspots_wiki python=3.8
 conda activate blindspots_wiki
+```
+Install pytorch with GPU (use your system's CUDA version)
+```
+conda install pytorch pytorch-cuda=11.6 -c pytorch -c nvidia
+```
+Install other packages via pip
+```
+pip install -r requirements.txt 
 ```
 
 For using Spacy in the consistency checks:
