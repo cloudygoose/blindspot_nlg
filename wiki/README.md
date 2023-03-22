@@ -76,7 +76,7 @@ Use `repl_gen.py` to generate noised hypotheses:
 python repl_gen.py --generation data/refs2.txt --op $OP
 ```
 
-where `$OP` is one of ['prefix', 'middle', 'suffix', 'prefix-shuffle', 'middle-shuffle', 'suffix-shuffle', 'replast'] that determines the operation. The first 6 corresponds to the 6 error types are used for the positioned error test. `repleast` is used for the repetition test.
+where `$OP` is one of ['prefix', 'middle', 'suffix', 'replast'] that determines the operation. The first 6 corresponds to the 6 error types are used for the positioned error test. `repleast` is used for the repetition test.
 
 The naming convention here is a bit different to the paper. Here is a conversion table, where noise type is the name shown on the paper:
 
@@ -85,9 +85,6 @@ The naming convention here is a bit different to the paper. Here is a conversion
 | Random-Start   | prefix         |
 | Random-Middle  | middle         |
 | Random-End     | suffix         |
-| Shuffle-Start  | prefix-shuffle |
-| Shuffle-Middle | middle-shuffle |
-| Shuffle-End    | suffix-shuffle |
 
 By default, the noised hypothesis will be generated at `data/refs2_repl-{OP}-10.txt` where `{OP}` is the chosen operation.
 
@@ -152,9 +149,9 @@ Below we provide a concrete example of how to reproduce the positioned error tes
 ```sh
 PYTHONPATH=$PWD python repl_gen.py --generation data/refs2.txt --op prefix
 
-PYTHONPATH=$PWD ./eval_mauve.sh rbt data/refs1.txt _prefix-shuffle data/refs2_repl-prefix-shuffle-10.txt
+PYTHONPATH=$PWD ./eval_mauve.sh rbt data/refs1.txt _prefix data/refs2_repl-prefix-10.txt
 ```
-This will produce `data/mauve_rbt-l_prefix-shuffle.csv` which stores the MAUVE score and `data/div_rbt-l_prefix-shuffle.png` which stores the divergence plot.
+This will produce `data/mauve_rbt-l_prefix.csv` which stores the MAUVE score and `data/div_rbt-l_prefix.png` which stores the divergence plot.
 
 ## Notes
 
@@ -166,3 +163,5 @@ To get the conda lib path you can:
 ```
 from distutils.sysconfig import get_python_lib; print(get_python_lib())
 ```
+
+Due to a bug in the implementation of the `-shuffle` operation, it's temporarily disabled. We are working on to fix this issue soon.
