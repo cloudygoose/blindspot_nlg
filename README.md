@@ -10,7 +10,7 @@ One shortcoming of WMT data is they mostly contain only one sentence, therefore 
 
 The code for summarization or translation is developed based on the released code of [BARTScore](https://github.com/neulab/BARTScore/).
 
-To appear at ACL 2023 (oral). If you find our work useful, please cite our paper, thanks!
+In Proceedings of ACL 2023 (oral). If you find our work useful, please cite our paper, thanks!
 ```
 @inproceedings{he-etal-2023-blind,
     title = "On the Blind Spots of Model-Based Evaluation Metrics for Text Generation",
