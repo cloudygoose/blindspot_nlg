@@ -55,7 +55,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-g', '--generation', type=str, nargs='+', required=True, help='use relative path from project home dir!!')
     parser.add_argument('-t', '--tokenizer', type=str, default='gpt2', help='tokenizer for huggingface AutoModelForCausalLM that used to generate the text')
-    parser.add_argument('--op', type=str, choices=['prefix', 'middle', 'suffix', 'replast'], default='prefix')
+    parser.add_argument('--op', type=str, choices=['prefix', 'middle', 'suffix', 'prefix-shuffle', 'middle-shuffle', 'suffix-shuffle', 'replast'], default='prefix')
     parser.add_argument('--times', type=int, default=10)
     parser.add_argument('--seed', type=int, default=0)
 

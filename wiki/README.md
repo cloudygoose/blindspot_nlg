@@ -76,7 +76,7 @@ Use `repl_gen.py` to generate noised hypotheses:
 python repl_gen.py --generation data/refs2.txt --op $OP
 ```
 
-where `$OP` is one of ['prefix', 'middle', 'suffix', 'replast'] that determines the operation. The first 6 corresponds to the 6 error types are used for the positioned error test. `repleast` is used for the repetition test.
+where `$OP` is one of ['prefix', 'middle', 'suffix', 'prefix-shuffle', 'middle-shuffle', 'suffix-shuffle', 'replast'] that determines the operation. The first 6 corresponds to the 6 error types are used for the positioned error test. `repleast` is used for the repetition test.
 
 The naming convention here is a bit different to the paper. Here is a conversion table, where noise type is the name shown on the paper:
 
