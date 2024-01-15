@@ -27,6 +27,14 @@ Download NLTK data:
 python -m nltk.downloader popular
 ```
 
+Please install a custom version of MAUVE with gpt2/bert restriction removed (see https://github.com/cloudygoose/blindspot_nlg/issues/2 for details):
+
+```
+git clone git@github.com:jackjyzhang/mauve.git
+cd mauve
+pip install -e .
+```
+
 ## Data
 To get full wikitext-103 data, run `python get_wiki_data.py`, which simply download from huggingface datasets and save it locally.
 
@@ -163,5 +171,3 @@ To get the conda lib path you can:
 ```
 from distutils.sysconfig import get_python_lib; print(get_python_lib())
 ```
-
-Due to a bug in the implementation of the `-shuffle` operation, it's temporarily disabled. We are working on to fix this issue soon.
